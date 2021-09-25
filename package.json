@@ -1,6 +1,6 @@
 {
   "name": "localizationcore",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "displayName": "Localization Core",
   "description": "Localization core isolated from projects",
   "keywords": [
@@ -11,7 +11,15 @@
     "name": "Romenics",
     "url": "https://discord.com/invite/celestialcommand"
   },
+  
   "type": "template",
   "documentationUrl": "https://github.com/Romenics/LocalizationCore/blob/main/README.md",
-  "changelogUrl": "https://github.com/Romenics/LocalizationCore/blob/main/CHANGELOG.md"
+  "changelogUrl": "https://github.com/Romenics/LocalizationCore/blob/main/CHANGELOG.md",
+  "samples": [
+        {
+            "displayName": "Localization Example",
+			"description": "Contains sample localization dropdown and text",
+            "path": "Samples~/Localization"
+        }
+    ]
 }

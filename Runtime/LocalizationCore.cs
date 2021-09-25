@@ -84,6 +84,7 @@ public class LocalizationCore : MonoBehaviour {
 		// Генерируем опции для дропдавна со списоком языков
 		for (int i = 1; i < ArrayData.GetLength(0); i++) {
 			LanguageDropdown.options.Add (new Dropdown.OptionData(ArrayData[i,0]));
+			Languages.Add (ArrayData[i, 0]);
 		}
 
 
@@ -106,6 +107,8 @@ public class LocalizationCore : MonoBehaviour {
 		// Находим выбранный язык среди переведенных языков и устанавливаем его
 		string chosenLanguage = LanguageDropdown.options[ID].text;		
         CurrentLanguageID = Languages.IndexOf(chosenLanguage);
+
+		LoadData();
 
 		// Обновить состояния всех LocalizationTextInserter
 		foreach (GameObject EachCanvasObject in AllCanvases) {
