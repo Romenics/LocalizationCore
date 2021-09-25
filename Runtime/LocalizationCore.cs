@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
 public class LocalizationCore : MonoBehaviour {
-
 
 	public static LocalizationCore Global;
 
@@ -13,13 +13,35 @@ public class LocalizationCore : MonoBehaviour {
 	public List<string>		Texts;
     public int				CurrentLanguageID;
 	public Dropdown			LanguageDropdown;
-	public List<string>		ReadyLanguages;
+	public List<string>		Languages;
+
+	/// <summary>
+	/// Need to place here all Canvas
+	/// </summary>
+	public GameObject[] AllCanvases;
 
 	public string[,] ArrayData;
+
 
 	void Awake () {
         Global = this;
 		LoadData();
+	}
+
+
+	void Start () {
+
+		// Загрузить язык, который пользователь выбрал в прошлый раз
+		if (File.Exists (Application.persistentDataPath + "/Language.txt") == true) {
+			string LastLanguageName = File.ReadAllText (Application.persistentDataPath + "/Language.txt", System.Text.Encoding.UTF8);
+			CurrentLanguageID =  Languages.IndexOf (LastLanguageName);
+
+			SetLanguage (CurrentLanguageID);
+		}
+		// Иначе включить англ по умолчанию
+		else {
+			SetLanguage(0);
+		}
 	}
 
 	
@@ -57,6 +79,12 @@ public class LocalizationCore : MonoBehaviour {
 		Keys.Clear();
 		English.Clear();
 		Texts.Clear();
+		Languages.Clear ();
+
+		// Генерируем опции для дропдавна со списоком языков
+		for (int i = 1; i < ArrayData.GetLength(0); i++) {
+			LanguageDropdown.options.Add (new Dropdown.OptionData(ArrayData[i,0]));
+		}
 
 
 		for (int i = 0; i < ArrayData.GetLength(1); i++) {
@@ -71,42 +99,13 @@ public class LocalizationCore : MonoBehaviour {
 
 
 	/// <summary>
-	///  Получаем список языков которые переведены
-	/// </summary>
-	public void CheckLanguageInSheets() {
-
-		LoadData();
-		ReadyLanguages.Clear();
-
-		// Идем по столбцам начиная с 1 ибо на 0 ключи
-		for (int i = 1; i < ArrayData.GetLength(0); i++) {
-
-			ReadyLanguages.Add("");
-
-			// Если 3я строка переведена
-			if (ArrayData[i, 2] != "need to translate") {
-
-				// то изменяем пустую строку языка на настоящий язык
-				ReadyLanguages[i - 1] = ArrayData[i, 0];
-			}
-		}
-	}
-
-	/// <summary>
 	/// Вызывается из Localization Dropdown 
 	/// </summary>
 	public void SetLanguage (int ID) {
 		
 		// Находим выбранный язык среди переведенных языков и устанавливаем его
 		string chosenLanguage = LanguageDropdown.options[ID].text;		
-        CurrentLanguageID = ReadyLanguages.IndexOf(chosenLanguage);
-
-
-		// Получить массив текста из CSV
-		LoadData ();
-
-		GameObject[] AllCanvases = new GameObject[1];
-		//AllCanvases[0] = NetworkUI.Global.gameObject;
+        CurrentLanguageID = Languages.IndexOf(chosenLanguage);
 
 		// Обновить состояния всех LocalizationTextInserter
 		foreach (GameObject EachCanvasObject in AllCanvases) {
@@ -118,12 +117,11 @@ public class LocalizationCore : MonoBehaviour {
 			}
 		}
 
-        //GameSettings	   .Global.Save     ();
-
+		// Записываем в файл выбранный язык
+		File.WriteAllText (Application.persistentDataPath + "/Language.txt", chosenLanguage, System.Text.Encoding.UTF8);
 
 		// Это надо чтобы при загрузке локализации при старте игры, в dropdown задавалось новое значение
-		// Что удивительно, это не создает бесконечный цикл и не зависает
-		LanguageDropdown.value = ID;
+		LanguageDropdown.SetValueWithoutNotify (ID);
     }
 
 }

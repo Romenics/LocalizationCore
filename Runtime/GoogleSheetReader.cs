@@ -23,9 +23,9 @@ public class GoogleSheetReader : MonoBehaviour {
 
 
     // Define request parameters.
-    public string SheetID = "YourSheetIDHere";
+    public string SheetID = "1Wrp7ElHjBChgA59q0CPM-HiXoW4-2VewXRZA8bllVC8";
     //Sheet and range
-    public string Range = "Localization!A2:E";
+    public string Range = "Localization!A:E";
  
     public string ApplicationName = "Localization";
 
