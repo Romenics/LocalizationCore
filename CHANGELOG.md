@@ -1,5 +1,9 @@
 # Changelog
 
+v0.3.1
+
+Initial fix for Unity 2020.3.33f1
+
 v0.3.0
 
 Added sample canvas
